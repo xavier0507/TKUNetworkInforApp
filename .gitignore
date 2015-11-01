@@ -1,0 +1,13 @@
+/app/*.pro
+/app/*.iml
+/.idea
+/.gradle
+/build/intermediates/dex-cache/cache.xml
+/local.properties
+/build/intermediates/model_data.bin
+/TKUEasyNetworkInforApp.iml
+/gradle/wrapper/gradle-wrapper.jar
+/gradle/wrapper/gradle-wrapper.properties
+/gradlew
+/gradlew.bat
+/master.iml

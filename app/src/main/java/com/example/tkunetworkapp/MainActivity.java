@@ -26,199 +26,148 @@ import com.example.tkunetworkapp.beans.MyDataResult;
 import com.google.gson.Gson;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    // UI Components
-    private ProgressBar progressLoading;
-//	private Button jsonContentButton;
-//	private TextView jsonContentText;
-//	private Button parsedContentButton;
-//	private TextView parsedContentText;
+	// UI Components
+	private ProgressBar progressLoading;
+	private Button listContentButton;
+	private ListView contentListView;
+	private BaseListAdapter<MyDataResult.ResultItem> resultItemBaseListAdapter;
 
-    private Button listContentButton;
-    private ListView contentListView;
-    private BaseListAdapter<MyDataResult.ResultItem> resultItemBaseListAdapter;
+	// The working queue of Volley
+	private RequestQueue requestQueue;
 
-    // The working queue of Volley
-    private RequestQueue requestQueue;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		toolbar.setTitle("TKU簡易網路資料瀏覽App");
+		setSupportActionBar(toolbar);
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("TKU簡易網路資料瀏覽App");
-        setSupportActionBar(toolbar);
+		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+		drawer.setDrawerListener(toggle);
+		toggle.syncState();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+		navigationView.setNavigationItemSelectedListener(this);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+		this.execute();
+	}
 
-        this.execute();
-    }
+	@Override
+	public void onBackPressed() {
+		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		if (drawer.isDrawerOpen(GravityCompat.START)) {
+			drawer.closeDrawer(GravityCompat.START);
+		} else {
+			super.onBackPressed();
+		}
+	}
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return super.onOptionsItemSelected(item);
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        //		int id = item.getItemId();
-        //
-        //		//noinspection SimplifiableIfStatement
-        //		if (id == R.id.action_settings) {
-        //			return true;
-        //		}
+	@SuppressWarnings("StatementWithEmptyBody")
+	@Override
+	public boolean onNavigationItemSelected(MenuItem item) {
+		// Handle navigation view item clicks here.
+		int id = item.getItemId();
 
-        return super.onOptionsItemSelected(item);
-    }
+		if (id == R.id.nav_data) {
+		} else if (id == R.id.nav_browse) {
+		}
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        //		int id = item.getItemId();
+		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+		drawer.closeDrawer(GravityCompat.START);
+		return true;
+	}
 
-        //		if (id == R.id.nav_camara) {
-        //			// Handle the camera action
-        //		} else if (id == R.id.nav_gallery) {
-        //
-        //		} else if (id == R.id.nav_slideshow) {
-        //
-        //		} else if (id == R.id.nav_manage) {
-        //
-        //		} else if (id == R.id.nav_share) {
-        //
-        //		} else if (id == R.id.nav_send) {
-        //
-        //		}
+	/*
+	 * Helper Methods
+	 */
+	private void execute() {
+		this.initApiRequestQueue();
+		this.prepareUI();
+		this.prepareEvents();
+		this.invokeStringRequest();
+	}
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
+	private void initApiRequestQueue() {
+		this.requestQueue = Volley.newRequestQueue(this);
+	}
 
-    /*
-     * Helper Methods
-     */
-    private void execute() {
-        this.initApiRequestQueue();
-        this.prepareUI();
-        this.prepareEvents();
-        this.invokeStringRequest();
-    }
+	private void prepareUI() {
+		this.progressLoading = (ProgressBar) findViewById(R.id.progress_loading);
+		this.listContentButton = (Button) findViewById(R.id.btn_show_list_content);
+		this.contentListView = (ListView) findViewById(R.id.list_content);
+		this.resultItemBaseListAdapter = new LandscapeListAdapter(this);
+	}
 
-    private void initApiRequestQueue() {
-        this.requestQueue = Volley.newRequestQueue(this);
-    }
+	private void prepareEvents() {
+		this.listContentButton.setOnClickListener(this.buttonOnClickListener);
+	}
 
-    private void prepareUI() {
-        this.progressLoading = (ProgressBar) findViewById(R.id.progress_loading);
-//		this.jsonContentButton = (Button) findViewById(R.id.btn_json_content);
-//		this.jsonContentText = (TextView) findViewById(R.id.text_json_content);
-//		this.parsedContentButton = (Button) findViewById(R.id.btn_parsed_content);
-//		this.parsedContentText = (TextView) findViewById(R.id.text_parsed_content);
+	/*
+	 * API Request Methods
+	 */
+	private void invokeStringRequest() {
+		String requestURL = "http://data.taipei/opendata/datalist/apiAccess?scope=resourceAquire&rid=bf073841-c734-49bf-a97f-3757a6013812&limit=10";
 
-        this.listContentButton = (Button) findViewById(R.id.btn_show_list_content);
-        this.contentListView = (ListView) findViewById(R.id.list_content);
-        this.resultItemBaseListAdapter = new LandscapeListAdapter(this);
-    }
+		final StringRequest getDataRequest = new StringRequest(
+				Request.Method.GET,
+				requestURL,
+				new Response.Listener<String>() {
+					@Override
+					public void onResponse(final String response) {
+						Gson gson = new Gson();
+						MyDataResult myDataResult = gson.fromJson(response, MyDataResult.class);
 
-    private void prepareEvents() {
-//		this.jsonContentButton.setOnClickListener(this.buttonOnClickListener);
-//		this.parsedContentButton.setOnClickListener(this.buttonOnClickListener);
+						resultItemBaseListAdapter.clear();
+						resultItemBaseListAdapter.addAll(myDataResult.getResult().getResults());
+						contentListView.setAdapter(resultItemBaseListAdapter);
 
-        this.listContentButton.setOnClickListener(this.buttonOnClickListener);
-    }
+						progressLoading.setVisibility(View.GONE);
+					}
+				},
+				new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						progressLoading.setVisibility(View.GONE);
+					}
+				});
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				progressLoading.setVisibility(View.VISIBLE);
+			}
+		}).start();
+		requestQueue.add(getDataRequest);
+	}
 
-    /*
-     * API Request Methods
-     */
-    private void invokeStringRequest() {
-        String requestURL = "http://data.taipei/opendata/datalist/apiAccess?scope=resourceAquire&rid=bf073841-c734-49bf-a97f-3757a6013812&limit=10";
+	/*
+	 * Events
+	 */
+	private View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			this.determineButton(v.getId());
+		}
 
-        final StringRequest getDataRequest = new StringRequest(
-                Request.Method.GET,
-                requestURL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(final String response) {
-                        Gson gson = new Gson();
-                        MyDataResult myDataResult = gson.fromJson(response, MyDataResult.class);
-
-//                        String tmpResult = "";
-//                        for (MyDataResult.ResultItem resultItem : myDataResult.getResult().getResults()) {
-//                            tmpResult += resultItem.get_id() + "\n" + resultItem.getParkName() + "\n" + resultItem.getIntroduction() + "\n\n";
-//                        }
-
-//                        jsonContentText.setText(response);
-//                        parsedContentText.setText(tmpResult);
-
-                        resultItemBaseListAdapter.clear();
-                        resultItemBaseListAdapter.addAll(myDataResult.getResult().getResults());
-                        contentListView.setAdapter(resultItemBaseListAdapter);
-
-                        progressLoading.setVisibility(View.GONE);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        progressLoading.setVisibility(View.GONE);
-                    }
-                });
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                progressLoading.setVisibility(View.VISIBLE);
-            }
-        }).start();
-        requestQueue.add(getDataRequest);
-    }
-
-    /*
-     * Events
-     */
-    private View.OnClickListener buttonOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            this.determineButton(v.getId());
-        }
-
-        private void determineButton(int viewId) {
-            switch (viewId) {
-//				case R.id.btn_json_content:
-//					jsonContentText.setVisibility(View.VISIBLE);
-//					parsedContentText.setVisibility(View.GONE);
-//					break;
-//
-//				case R.id.btn_parsed_content:
-//					jsonContentText.setVisibility(View.GONE);
-//					parsedContentText.setVisibility(View.VISIBLE);
-//					break;
-
-                case R.id.btn_show_list_content:
-                    contentListView.setVisibility(View.VISIBLE);
-                    break;
-            }
-        }
-    };
+		private void determineButton(int viewId) {
+			switch (viewId) {
+				case R.id.btn_show_list_content:
+					contentListView.setVisibility(View.VISIBLE);
+					break;
+			}
+		}
+	};
 }

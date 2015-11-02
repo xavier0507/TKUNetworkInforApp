@@ -1,5 +1,6 @@
 package com.example.tkunetworkapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -93,8 +94,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		int id = item.getItemId();
 
 		if (id == R.id.nav_data) {
+			Intent intent = new Intent(this, RawDataActivity.class);
+			startActivity(intent);
 		} else if (id == R.id.nav_browse) {
 		}
+
+
 
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawer.closeDrawer(GravityCompat.START);
@@ -153,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 					@Override
 					public void onResponse(final String response) {
 						Gson gson = new Gson();
-						MyDataResult myDataResult = gson.fromJson(response, MyDataResult.class);
+						final MyDataResult myDataResult = gson.fromJson(response, MyDataResult.class);
 
 						resultItemBaseListAdapter.clear();
 						resultItemBaseGridAdapter.clear();
@@ -162,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 						resultItemBaseListAdapter.addAll(myDataResult.getResult().getResults());
 						resultItemBaseGridAdapter.addAll(myDataResult.getResult().getResults());
 						resultItemBaseLargeAdapter.addAll(myDataResult.getResult().getResults());
+
 
 						resultItemBaseListAdapter.notifyDataSetChanged();
 						resultItemBaseGridAdapter.notifyDataSetChanged();

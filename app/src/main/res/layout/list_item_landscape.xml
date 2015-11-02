@@ -31,7 +31,6 @@
                 android:layout_marginTop="10dp"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:text="公園名稱: %s"
                 tools:text="公園名稱: 二二八和平公園"/>
 
             <TextView
@@ -43,7 +42,6 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
-                android:text="景點名稱: %s"
                 tools:text="景點名稱: 急公好義坊"/>
 
             <TextView
@@ -53,7 +51,6 @@
                 android:layout_alignBottom="@+id/text_product_sale_price"
                 android:layout_marginRight="10dp"
                 android:layout_toRightOf="@+id/text_product_sale_price"
-                android:text="開放時間: %s"
                 tools:text="開放時間: 00:00~24:00"/>
         </LinearLayout>
     </LinearLayout>

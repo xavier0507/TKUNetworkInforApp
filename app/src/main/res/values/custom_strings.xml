@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="custom_text_park_name">公園名稱: %s</string>
+	<string name="custom_text_landscape_name">景點名稱: %s</string>
+	<string name="custom_text_open_time">開放時間: %s</string>
+</resources>

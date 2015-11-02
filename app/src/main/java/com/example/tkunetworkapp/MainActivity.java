@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -20,17 +21,26 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.tkunetworkapp.adapters.BaseGridAdapter;
 import com.example.tkunetworkapp.adapters.BaseListAdapter;
+import com.example.tkunetworkapp.adapters.LandscapeGridAdapter;
 import com.example.tkunetworkapp.adapters.LandscapeListAdapter;
 import com.example.tkunetworkapp.beans.MyDataResult;
+import com.example.tkunetworkapp.listeners.CustomOnGlobalLayoutListener;
 import com.google.gson.Gson;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 	// UI Components
 	private ProgressBar progressLoading;
 	private Button listContentButton;
+	private Button gridContentButton;
+	private Button largeContentButton;
 	private ListView contentListView;
+	private GridView contentGridView;
+	private GridView contentLargeGridView;
 	private BaseListAdapter<MyDataResult.ResultItem> resultItemBaseListAdapter;
+	private BaseGridAdapter<MyDataResult.ResultItem> resultItemBaseGridAdapter;
+	private BaseGridAdapter<MyDataResult.ResultItem> resultItemBaseLargeAdapter;
 
 	// The working queue of Volley
 	private RequestQueue requestQueue;
@@ -108,12 +118,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	private void prepareUI() {
 		this.progressLoading = (ProgressBar) findViewById(R.id.progress_loading);
 		this.listContentButton = (Button) findViewById(R.id.btn_show_list_content);
+		this.gridContentButton = (Button) findViewById(R.id.btn_show_grid_content);
+		this.largeContentButton = (Button) findViewById(R.id.btn_show_large_content);
 		this.contentListView = (ListView) findViewById(R.id.list_content);
+		this.contentGridView = (GridView) findViewById(R.id.grid_content);
+		this.contentLargeGridView = (GridView) findViewById(R.id.grid_large_content);
 		this.resultItemBaseListAdapter = new LandscapeListAdapter(this);
+		this.resultItemBaseGridAdapter = new LandscapeGridAdapter(this);
+		this.resultItemBaseLargeAdapter = new LandscapeGridAdapter(this);
+		this.contentListView.setAdapter(this.resultItemBaseListAdapter);
+		this.contentGridView.setAdapter(this.resultItemBaseGridAdapter);
+		this.contentLargeGridView.setAdapter(this.resultItemBaseLargeAdapter);
+
 	}
 
 	private void prepareEvents() {
 		this.listContentButton.setOnClickListener(this.buttonOnClickListener);
+		this.gridContentButton.setOnClickListener(this.buttonOnClickListener);
+		this.largeContentButton.setOnClickListener(this.buttonOnClickListener);
+		this.contentGridView.getViewTreeObserver().addOnGlobalLayoutListener(new CustomOnGlobalLayoutListener(this.resultItemBaseGridAdapter, this.contentGridView));
+		this.contentLargeGridView.getViewTreeObserver().addOnGlobalLayoutListener(new CustomOnGlobalLayoutListener(this.resultItemBaseLargeAdapter, this.contentLargeGridView).setLargeImageMode(true));
 	}
 
 	/*
@@ -132,8 +156,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 						MyDataResult myDataResult = gson.fromJson(response, MyDataResult.class);
 
 						resultItemBaseListAdapter.clear();
+						resultItemBaseGridAdapter.clear();
+						resultItemBaseLargeAdapter.clear();
+
 						resultItemBaseListAdapter.addAll(myDataResult.getResult().getResults());
-						contentListView.setAdapter(resultItemBaseListAdapter);
+						resultItemBaseGridAdapter.addAll(myDataResult.getResult().getResults());
+						resultItemBaseLargeAdapter.addAll(myDataResult.getResult().getResults());
+
+						resultItemBaseListAdapter.notifyDataSetChanged();
+						resultItemBaseGridAdapter.notifyDataSetChanged();
+						resultItemBaseLargeAdapter.notifyDataSetChanged();
 
 						progressLoading.setVisibility(View.GONE);
 					}
@@ -166,6 +198,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 			switch (viewId) {
 				case R.id.btn_show_list_content:
 					contentListView.setVisibility(View.VISIBLE);
+					contentGridView.setVisibility(View.GONE);
+					contentLargeGridView.setVisibility(View.GONE);
+					break;
+
+				case R.id.btn_show_grid_content:
+					contentListView.setVisibility(View.GONE);
+					contentGridView.setVisibility(View.VISIBLE);
+					contentLargeGridView.setVisibility(View.GONE);
+					break;
+
+				case R.id.btn_show_large_content:
+					contentListView.setVisibility(View.GONE);
+					contentGridView.setVisibility(View.GONE);
+					contentLargeGridView.setVisibility(View.VISIBLE);
 					break;
 			}
 		}

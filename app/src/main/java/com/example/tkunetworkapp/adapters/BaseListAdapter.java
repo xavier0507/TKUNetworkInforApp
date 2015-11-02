@@ -12,10 +12,12 @@ import java.util.List;
  */
 public abstract class BaseListAdapter<T> extends BaseAdapter {
     protected final List<T> list;
+    protected Context context;
     protected final LayoutInflater layoutInflater;
 
     public BaseListAdapter(Context context) {
         super();
+        this.context = context;
         this.list = new ArrayList<>();
         this.layoutInflater = LayoutInflater.from(context);
     }

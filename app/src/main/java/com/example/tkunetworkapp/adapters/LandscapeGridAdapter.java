@@ -12,17 +12,17 @@ import com.example.tkunetworkapp.beans.MyDataResult;
 import it.sephiroth.android.library.picasso.Picasso;
 
 /**
- * Created by xavier_yin on 15/11/1.
+ * Created by Xavier on 2015/11/2.
  */
-public class LandscapeListAdapter extends BaseListAdapter<MyDataResult.ResultItem> {
-	public LandscapeListAdapter(Context context) {
+public class LandscapeGridAdapter extends BaseGridAdapter<MyDataResult.ResultItem> {
+	public LandscapeGridAdapter(Context context) {
 		super(context);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			convertView = this.layoutInflater.inflate(R.layout.list_item_landscape, null);
+			convertView = this.layoutInflater.inflate(R.layout.grid_item_landscape, null);
 		}
 
 		final MyDataResult.ResultItem resultItem = this.getItem(position);
@@ -37,6 +37,11 @@ public class LandscapeListAdapter extends BaseListAdapter<MyDataResult.ResultIte
 		parkNameText.setText(this.context.getString(R.string.custom_text_park_name, resultItem.getParkName()));
 		landscapeNameText.setText(this.context.getString(R.string.custom_text_landscape_name, resultItem.getName()));
 		openTimeText.setText(this.context.getString(R.string.custom_text_open_time, resultItem.getOpenTime()));
+
+		if (this.productImageHeight != 0) {
+			ViewGroup.LayoutParams layoutParams = landscapeImageView.getLayoutParams();
+			layoutParams.height = this.productImageHeight;
+		}
 
 		return convertView;
 	}

@@ -12,3 +12,6 @@
 /gradlew.bat
 /master.iml
 /*.iml
+*.DS_Store
+/gradle
+

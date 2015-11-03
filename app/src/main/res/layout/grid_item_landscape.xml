@@ -8,8 +8,8 @@
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:background="@drawable/custom_bg_gray_thin_border"
 		android:layout_margin="4dp"
+		android:background="@drawable/custom_bg_gray_thin_border"
 		android:orientation="vertical">
 
 		<ImageView
@@ -22,9 +22,9 @@
 			android:id="@+id/text_park_name"
 			android:layout_width="match_parent"
 			android:layout_height="48dp"
-			android:layout_marginTop="10dp"
 			android:layout_marginLeft="10dp"
 			android:layout_marginRight="10dp"
+			android:layout_marginTop="10dp"
 			android:ellipsize="end"
 			android:maxLines="2"
 			tools:text="公園名稱: 二二八和平公園"/>

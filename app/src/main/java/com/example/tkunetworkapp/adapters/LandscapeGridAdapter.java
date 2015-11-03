@@ -43,6 +43,8 @@ public class LandscapeGridAdapter extends BaseGridAdapter<MyDataResult.ResultIte
 			layoutParams.height = this.productImageHeight;
 		}
 
+		convertView.setTag(resultItem);
+
 		return convertView;
 	}
 }

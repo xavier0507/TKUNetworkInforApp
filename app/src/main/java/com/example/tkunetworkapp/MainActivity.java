@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -100,7 +101,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		}
 
 
-
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawer.closeDrawer(GravityCompat.START);
 		return true;
@@ -141,6 +141,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		this.listContentButton.setOnClickListener(this.buttonOnClickListener);
 		this.gridContentButton.setOnClickListener(this.buttonOnClickListener);
 		this.largeContentButton.setOnClickListener(this.buttonOnClickListener);
+
+		this.contentListView.setOnItemClickListener(this.dataOnItemClickListener);
+		this.contentGridView.setOnItemClickListener(this.dataOnItemClickListener);
+		this.contentLargeGridView.setOnItemClickListener(this.dataOnItemClickListener);
+
 		this.contentGridView.getViewTreeObserver().addOnGlobalLayoutListener(new CustomOnGlobalLayoutListener(this.resultItemBaseGridAdapter, this.contentGridView));
 		this.contentLargeGridView.getViewTreeObserver().addOnGlobalLayoutListener(new CustomOnGlobalLayoutListener(this.resultItemBaseLargeAdapter, this.contentLargeGridView).setLargeImageMode(true));
 	}
@@ -220,6 +225,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 					contentLargeGridView.setVisibility(View.VISIBLE);
 					break;
 			}
+		}
+	};
+
+	private AdapterView.OnItemClickListener dataOnItemClickListener = new AdapterView.OnItemClickListener() {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			this.launchActivity(view);
+		}
+
+		private void launchActivity(View view) {
+			MyDataResult.ResultItem resultItem = (MyDataResult.ResultItem) view.getTag();
+			Intent intent = new Intent(MainActivity.this, LandscapeActivity.class);
+			intent.putExtra("DATA", resultItem);
+			startActivity(intent);
 		}
 	};
 }

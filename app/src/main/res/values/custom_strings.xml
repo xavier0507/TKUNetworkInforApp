@@ -3,4 +3,5 @@
 	<string name="custom_text_park_name">公園名稱: %s</string>
 	<string name="custom_text_landscape_name">景點名稱: %s</string>
 	<string name="custom_text_open_time">開放時間: %s</string>
+	<string name="custom_text_intro">景點介紹: %s</string>
 </resources>

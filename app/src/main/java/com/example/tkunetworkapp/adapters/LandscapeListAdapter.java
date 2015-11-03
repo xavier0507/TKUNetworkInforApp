@@ -38,6 +38,8 @@ public class LandscapeListAdapter extends BaseListAdapter<MyDataResult.ResultIte
 		landscapeNameText.setText(this.context.getString(R.string.custom_text_landscape_name, resultItem.getName()));
 		openTimeText.setText(this.context.getString(R.string.custom_text_open_time, resultItem.getOpenTime()));
 
+		convertView.setTag(resultItem);
+
 		return convertView;
 	}
 }

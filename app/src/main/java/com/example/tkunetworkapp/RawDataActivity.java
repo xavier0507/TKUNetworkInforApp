@@ -35,7 +35,7 @@ public class RawDataActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.content_main);
+		setContentView(R.layout.activity_raw_data);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		this.execute();
 	}

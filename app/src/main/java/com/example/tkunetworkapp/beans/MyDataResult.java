@@ -2,12 +2,15 @@ package com.example.tkunetworkapp.beans;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Xavier on 2015/10/30.
  */
 public class MyDataResult {
+	private static final long serialVersionUID = 1L;
+
 	private Result result;
 
 	public Result getResult() {
@@ -20,6 +23,8 @@ public class MyDataResult {
 
 	// Inner Classes
 	public static class Result {
+		private static final long serialVersionUID = 1L;
+
 		private String offset;
 
 		@SerializedName("limit")
@@ -72,7 +77,9 @@ public class MyDataResult {
 		}
 	}
 
-	public static class ResultItem {
+	public static class ResultItem implements Serializable {
+		private static final long serialVersionUID = 1L;
+
 		private String _id;
 		private String ParkName;
 		private String Name;
